@@ -8,6 +8,7 @@
 </head>
 <body>
     <div id="score-container">Pontuação: <span id="score">0</span></div>
+    <span id="next-question-timer"></span>
     <!-- Restante do seu HTML aqui -->
     <div id="quiz-container">
         <div id="question-container">
@@ -17,13 +18,11 @@
             <ul id="options-list">
                 <!-- As opções serão inseridas aqui pelo JavaScript -->
             </ul>
-            <button id="confirm-answer" disabled>Confirmar Resposta</button>
         </div>
         
         <div id="error-message" style="min-height:22px; visibility:hidden; color: red;">Errado! Tente novamente.</div>
 
         <div id="correct-answer-info" style="display:none;">
-            <button id="next-question">Próxima Pergunta</button>
         </div>
 
         <button id="restart-quiz" style="display:none;">Refazer</button>

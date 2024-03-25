@@ -40,15 +40,16 @@ document.addEventListener('DOMContentLoaded', function() {
     let instrumentosRestantes = [...instrumentos];
     let totalScore = 0;
     let attemptCount = 0;
+    let nextQuestionTimer; // Variável para armazenar o timer
 
     const questionText = document.getElementById('question-text');
     const optionsList = document.getElementById('options-list');
     const errorMessage = document.getElementById('error-message');
     const correctAnswerInfo = document.getElementById('correct-answer-info');
     const nextQuestionButton = document.getElementById('next-question');
-    const confirmButton = document.getElementById('confirm-answer');
     const restartQuizButton = document.getElementById('restart-quiz');
     const scoreDisplay = document.getElementById('score');
+    const nextQuestionTimerDisplay = document.getElementById('next-question-timer'); // Elemento para exibir o contador
 
     function gerarQuestao() {
         if (instrumentosRestantes.length === 0) {
@@ -92,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
             currentQuestion.options.forEach(option => {
                 const li = document.createElement('li');
                 li.textContent = option;
-                li.onclick = () => selectOption(option, currentQuestion.correctAnswer);
+                li.onclick = () => selectOption(li, currentQuestion.correctAnswer);
                 optionsList.appendChild(li);
             });
             // Garante que o botão de confirmar e a mensagem de erro sejam escondidos ao carregar uma nova pergunta
@@ -102,129 +103,106 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function loadNextQuestion() {
+        correctAnswerInfo.style.display = 'none';
+        // Reseta o estilo e ação dos elementos 'li' para a próxima questão
+        resetOptionsStyleAndAction();
+        loadQuestion(); // Carrega a próxima questão
+        nextQuestionTimerDisplay.textContent = '';
+        clearTimeout(nextQuestionTimer); // Limpa o timer anterior
+    }
+
     function selectOption(selectedOption, correctAnswer) {
-        // Reativa o botão de confirmar para a nova seleção
-        confirmButton.style.display = 'inline-block';
-        errorMessage.style.visibility = 'hidden'; // Esconde a mensagem de erro sempre que uma nova opção é selecionada
-        confirmButton.disabled = false;
-    
-        confirmButton.onclick = () => {
-            // Impede múltiplos cliques no botão de confirmar
-            confirmAnswer(selectedOption, correctAnswer);
-        };
+        // Impede múltiplos cliques na mesma opção
+        // Reativa a seleção de opções
+        selectedOption.style.pointerEvents = 'auto';
+        // Incrementa o contador de tentativas
+        attemptCount++;
+        // Chama a função para confirmar a resposta
+        confirmAnswer(selectedOption, correctAnswer);
     }
 
-function confirmAnswer(selectedOption, correctAnswer) {
-    confirmButton.disabled = true;
-    if (selectedOption === correctAnswer) {
-        // Incrementa o contador de tentativas antes de calcular os pontos
-        attemptCount++;
-        
-        // Calcula os pontos com base no número de tentativas
-        let pointsEarned = Math.max(5 - attemptCount, 1);
-        totalScore += pointsEarned;
-        document.getElementById('score').textContent = `${totalScore}`;
-
-        // Desativa a interação com todos os itens da lista
-        optionsList.querySelectorAll('li').forEach(li => {
-            li.style.pointerEvents = 'none';
-        });
-
-        // Configura a exibição das informações da resposta correta
-        optionsList.querySelectorAll('li').forEach(li => {
-            if (li.textContent === correctAnswer) {
-                li.style.backgroundColor = "#4CAF50"; // Verde para a resposta correta
-                li.style.color = "white";
-            } else {
-                // Garante que as opções incorretas não sejam destacadas
-                li.style.backgroundColor = ""; 
-                li.style.color = "";
+    function confirmAnswer(selectedOption, correctAnswer) {
+        if (selectedOption.textContent === correctAnswer) {
+            // Calcula os pontos com base no número de tentativas
+            let pointsEarned = 5 - attemptCount;
+            if (pointsEarned < 1) {
+                pointsEarned = 1; // Pontuação mínima é 1 ponto
             }
-        });
+            totalScore += pointsEarned;
+            document.getElementById('score').textContent = `${totalScore}`;
 
-        // Exibe informações sobre a resposta correta
-        correctAnswerInfo.style.display = 'block';
-        confirmButton.style.display = 'none';
-        // Prepara a UI para a próxima questão
-        nextQuestionButton.style.display = 'inline-block';
+            // Configura a exibição das informações da resposta correta
+            optionsList.querySelectorAll('li').forEach(li => {
+                if (li.textContent === correctAnswer) {
+                    li.style.backgroundColor = "#4CAF50"; // Verde para a resposta correta
+                    li.style.color = "white";
+                } else {
+                    // Garante que as opções incorretas não sejam destacadas
+                    li.style.backgroundColor = ""; 
+                    li.style.color = "";
+                }
+            });
 
-        nextQuestionButton.onclick = () => {
-            correctAnswerInfo.style.display = 'none';
-            nextQuestionButton.style.display = 'none';
-            // Reseta o estilo e ação dos elementos 'li' para a próxima questão
-            resetOptionsStyleAndAction();
-            loadQuestion(); // Carrega a próxima questão
-            confirmButton.disabled = false;
-        };
-    } else {
-        attemptCount++;
-        errorMessage.textContent = "Errado! Tente novamente.";
-        errorMessage.style.visibility = 'visible';
-
-        // Destaca a opção incorreta selecionada em vermelho
-        optionsList.querySelectorAll('li').forEach(li => {
-            if (li.textContent === selectedOption) {
-                li.style.backgroundColor = "#f44336"; // Vermelho para resposta incorreta
-                li.style.color = "white";
+            let count = 2; // Inicia o contador em 2 segundos
+            nextQuestionTimerDisplay.textContent = `Próxima pergunta em ${count} segundos`;
+            nextQuestionTimer = setInterval(() => {
+            count--; // Decrementa o contador a cada segundo
+            nextQuestionTimerDisplay.textContent = `Próxima pergunta em ${count} segundos`;
+            if (count === 0) {
+                clearInterval(nextQuestionTimer); // Para o contador quando atingir 0
+                loadNextQuestion(); // Carrega a próxima pergunta
             }
-        });
+        }, 1000); // Atualiza o contador a cada 1000 milissegundos (1 segundo)
 
-        confirmButton.disabled = false; // Ativa o botão de confirmar resposta
-
-        // Reativa a seleção de opções para permitir outra tentativa
-        // Mas remove a interação da opção já selecionada
-        optionsList.querySelectorAll('li').forEach(li => {
-            if (li.textContent !== selectedOption) {
-                li.onclick = () => selectOption(li.textContent, correctAnswer);
-            } else {
-                li.onclick = null; // Remove a ação da opção incorreta selecionada
-            }
-        });
+            // Aguarda 2 segundos antes de carregar a próxima pergunta
+            setTimeout(function() {
+                loadNextQuestion();
+            }, 2000);
+        } else {
+            // Destaca a opção incorreta selecionada em vermelho
+            selectedOption.style.backgroundColor = "#f44336"; // Vermelho para resposta incorreta
+            selectedOption.style.color = "white";
+        }
     }
-}
-
-    
 
     function resetOptionsStyleAndAction() {
+        // Reseta o estilo das opções para o estado original
         optionsList.querySelectorAll('li').forEach(li => {
-            // Reseta o estilo das opções para o estado original
             li.style.backgroundColor = "";
             li.style.color = "";
-            li.disabled = false;
             // Reativa a seleção de opções
-            li.onclick = () => selectOption(li.textContent, questions[currentQuestionIndex].correctAnswer);
+            li.style.pointerEvents = 'auto';
         });
-        // Reseta o contador de tentativas para a próxima pergunta
+        // Reseta o contador de tentativas
         attemptCount = 0;
-        confirmButton.style.display = 'inline-block';
     }
-
-    function showFinalScore() {
+    
+    function     showFinalScore() {
         correctAnswerInfo.style.display = 'none';
         optionsList.innerHTML = ''; // Limpa as opções
         questionText.textContent = "Quiz finalizado! Sua pontuação final é: " + totalScore + ".";
         nextQuestionButton.style.display = 'none'; // Esconde o botão de próxima pergunta
-        confirmButton.style.display = 'none'; // Esconde o botão de confirmar
         restartQuizButton.style.display = 'inline-block'; // Mostra o botão de refazer
-        }
-
-        restartQuizButton.addEventListener('click', function() {
-            instrumentosRestantes = [...instrumentos]; // Restaura a lista de instrumentos para o estado inicial
-            totalScore = 0; // Reseta a pontuação
-            scoreDisplay.textContent = 'Pontuação: 0'; // Reseta a exibição da pontuação
-            loadQuestion(); // Carrega a primeira questão novamente
-            restartQuizButton.style.display = 'none'; // Esconde o botão de refazer
-            correctAnswerInfo.style.display = 'none'; // Garante que a tela de informação esteja escondida
-        });
+    }
+    
+    restartQuizButton.addEventListener('click', function() {
+        instrumentosRestantes = [...instrumentos]; // Restaura a lista de instrumentos para o estado inicial
+        totalScore = 0; // Reseta a pontuação
+        scoreDisplay.textContent = 'Pontuação: 0'; // Reseta a exibição da pontuação
+        loadQuestion(); // Carrega a primeira questão novamente
+        restartQuizButton.style.display = 'none'; // Esconde o botão de refazer
+        correctAnswerInfo.style.display = 'none'; // Garante que a tela de informação esteja escondida
+    });
         
-        // Carrega a primeira pergunta ao iniciar
-        loadQuestion();
-    });
+    // Carrega a primeira pergunta ao iniciar
+    loadQuestion();
+});
 
-    window.addEventListener('beforeunload', function (e) {
-        // Cancela o evento de fechar a janela
-        e.preventDefault();
-        // Define a mensagem que será exibida ao usuário
-        e.returnValue = '';
-    });
+    // window.addEventListener('beforeunload', function (e) {
+    //     // Cancela o evento de fechar a janela
+    //     e.preventDefault();
+    //     // Define a mensagem que será exibida ao usuário
+    //     e.returnValue = '';
+    // });
     
