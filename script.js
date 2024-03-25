@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
             question: "Qual é o instrumento cirúrgico mostrado na imagem?",
             options: [...opcoesIncorretas, respostaCorreta].sort(() => Math.random() - 0.5),
             correctAnswer: respostaCorreta,
-            image: `assets/${respostaCorreta.toLowerCase().replace(/[\sº]/g, '-').replace(/[^a-z0-9\-]/gi, '')}.png`
+            image: `https://raw.githubusercontent.com/Viniciusgomesf99/InstrumentariaUFTM/master/assets/${respostaCorreta.toLowerCase().replace(/[\sº]/g, '-').replace(/[^a-z0-9\-]/gi, '')}.png`
         };
     }
     
