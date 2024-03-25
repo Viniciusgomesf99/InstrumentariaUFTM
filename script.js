@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const optionsList = document.getElementById('options-list');
     const errorMessage = document.getElementById('error-message');
     const correctAnswerInfo = document.getElementById('correct-answer-info');
-    const infoTitle = document.getElementById('info-title');
     const nextQuestionButton = document.getElementById('next-question');
     const confirmButton = document.getElementById('confirm-answer');
     const restartQuizButton = document.getElementById('restart-quiz');
@@ -97,8 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 optionsList.appendChild(li);
             });
             // Garante que o botão de confirmar e a mensagem de erro sejam escondidos ao carregar uma nova pergunta
-            confirmButton.style.display = 'none';
-            errorMessage.style.display = 'none';
+            errorMessage.style.visibility = 'hidden';
         } else {
             showFinalScore();
         }
@@ -107,85 +105,98 @@ document.addEventListener('DOMContentLoaded', function() {
     function selectOption(selectedOption, correctAnswer) {
         // Reativa o botão de confirmar para a nova seleção
         confirmButton.style.display = 'inline-block';
-        errorMessage.style.display = 'none'; // Esconde a mensagem de erro sempre que uma nova opção é selecionada
+        errorMessage.style.visibility = 'hidden'; // Esconde a mensagem de erro sempre que uma nova opção é selecionada
+        confirmButton.disabled = false;
     
         confirmButton.onclick = () => {
             // Impede múltiplos cliques no botão de confirmar
-            confirmButton.style.display = 'none';
             confirmAnswer(selectedOption, correctAnswer);
         };
     }
 
-    function confirmAnswer(selectedOption, correctAnswer) {
-        if (selectedOption === correctAnswer) {
-            // Incrementa o contador de tentativas antes de calcular os pontos
-            attemptCount++;
-            
-            // Calcula os pontos com base no número de tentativas
-            let pointsEarned = Math.max(5 - attemptCount, 1);
-            totalScore += pointsEarned;
-            document.getElementById('score').textContent = `${totalScore}`;
-    
-            // Configura a exibição das informações da resposta correta
-            optionsList.querySelectorAll('li').forEach(li => {
-                if (li.textContent === correctAnswer) {
-                    li.style.backgroundColor = "#4CAF50"; // Verde para a resposta correta
-                    li.style.color = "white";
-                } else {
-                    // Garante que as opções incorretas não sejam destacadas
-                    li.style.backgroundColor = ""; 
-                    li.style.color = "";
-                }
-            });
-    
-            // Exibe informações sobre a resposta correta
-            infoTitle.textContent = selectedOption; 
-            correctAnswerInfo.style.display = 'block';
-    
-            // Prepara a UI para a próxima questão
-            nextQuestionButton.style.display = 'inline-block';
-            nextQuestionButton.onclick = () => {
-                correctAnswerInfo.style.display = 'none';
-                nextQuestionButton.style.display = 'none';
-                // Reseta o estilo e ação dos elementos 'li' para a próxima questão
-                resetOptionsStyleAndAction();
-                loadQuestion(); // Carrega a próxima questão
-            };
-        } else {
-            attemptCount++;
-            errorMessage.textContent = "Errado! Tente novamente.";
-            errorMessage.style.display = 'block';
-    
-            // Destaca a opção incorreta selecionada em vermelho
-            optionsList.querySelectorAll('li').forEach(li => {
-                if (li.textContent === selectedOption) {
-                    li.style.backgroundColor = "#f44336"; // Vermelho para resposta incorreta
-                    li.style.color = "white";
-                }
-            });
-    
-            // Reativa a seleção de opções para permitir outra tentativa
-            // Mas remove a interação da opção já selecionada
-            optionsList.querySelectorAll('li').forEach(li => {
-                if (li.textContent !== selectedOption) {
-                    li.onclick = () => selectOption(li.textContent, correctAnswer);
-                } else {
-                    li.onclick = null; // Remove a ação da opção incorreta selecionada
-                }
-            });
-        }
+function confirmAnswer(selectedOption, correctAnswer) {
+    confirmButton.disabled = true;
+    if (selectedOption === correctAnswer) {
+        // Incrementa o contador de tentativas antes de calcular os pontos
+        attemptCount++;
+        
+        // Calcula os pontos com base no número de tentativas
+        let pointsEarned = Math.max(5 - attemptCount, 1);
+        totalScore += pointsEarned;
+        document.getElementById('score').textContent = `${totalScore}`;
+
+        // Desativa a interação com todos os itens da lista
+        optionsList.querySelectorAll('li').forEach(li => {
+            li.style.pointerEvents = 'none';
+        });
+
+        // Configura a exibição das informações da resposta correta
+        optionsList.querySelectorAll('li').forEach(li => {
+            if (li.textContent === correctAnswer) {
+                li.style.backgroundColor = "#4CAF50"; // Verde para a resposta correta
+                li.style.color = "white";
+            } else {
+                // Garante que as opções incorretas não sejam destacadas
+                li.style.backgroundColor = ""; 
+                li.style.color = "";
+            }
+        });
+
+        // Exibe informações sobre a resposta correta
+        correctAnswerInfo.style.display = 'block';
+        confirmButton.style.display = 'none';
+        // Prepara a UI para a próxima questão
+        nextQuestionButton.style.display = 'inline-block';
+
+        nextQuestionButton.onclick = () => {
+            correctAnswerInfo.style.display = 'none';
+            nextQuestionButton.style.display = 'none';
+            // Reseta o estilo e ação dos elementos 'li' para a próxima questão
+            resetOptionsStyleAndAction();
+            loadQuestion(); // Carrega a próxima questão
+            confirmButton.disabled = false;
+        };
+    } else {
+        attemptCount++;
+        errorMessage.textContent = "Errado! Tente novamente.";
+        errorMessage.style.visibility = 'visible';
+
+        // Destaca a opção incorreta selecionada em vermelho
+        optionsList.querySelectorAll('li').forEach(li => {
+            if (li.textContent === selectedOption) {
+                li.style.backgroundColor = "#f44336"; // Vermelho para resposta incorreta
+                li.style.color = "white";
+            }
+        });
+
+        confirmButton.disabled = false; // Ativa o botão de confirmar resposta
+
+        // Reativa a seleção de opções para permitir outra tentativa
+        // Mas remove a interação da opção já selecionada
+        optionsList.querySelectorAll('li').forEach(li => {
+            if (li.textContent !== selectedOption) {
+                li.onclick = () => selectOption(li.textContent, correctAnswer);
+            } else {
+                li.onclick = null; // Remove a ação da opção incorreta selecionada
+            }
+        });
     }
+}
+
+    
 
     function resetOptionsStyleAndAction() {
         optionsList.querySelectorAll('li').forEach(li => {
             // Reseta o estilo das opções para o estado original
             li.style.backgroundColor = "";
             li.style.color = "";
+            li.disabled = false;
             // Reativa a seleção de opções
             li.onclick = () => selectOption(li.textContent, questions[currentQuestionIndex].correctAnswer);
         });
         // Reseta o contador de tentativas para a próxima pergunta
         attemptCount = 0;
+        confirmButton.style.display = 'inline-block';
     }
 
     function showFinalScore() {

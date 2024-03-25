@@ -12,18 +12,17 @@
     <div id="quiz-container">
         <div id="question-container">
             <img id="question-image" src="" alt="Imagem do Instrumento" style="max-width: 100%; margin-bottom: 20px; border-radius: 20px;max-height: 350px;
-            object-fit: cover;">
+            object-fit: cover;min-height: 350px;">
             <div id="question-text">Qual é o instrumento cirúrgico mostrado na imagem?</div>
             <ul id="options-list">
                 <!-- As opções serão inseridas aqui pelo JavaScript -->
             </ul>
-            <button id="confirm-answer" style="display:none;">Confirmar Resposta</button>
+            <button id="confirm-answer" disabled>Confirmar Resposta</button>
         </div>
         
-        <div id="error-message" style="display:none; color: red;">Errado! Tente novamente.</div>
+        <div id="error-message" style="min-height:22px; visibility:hidden; color: red;">Errado! Tente novamente.</div>
 
         <div id="correct-answer-info" style="display:none;">
-            <h3 id="info-title"></h3>
             <button id="next-question">Próxima Pergunta</button>
         </div>
 

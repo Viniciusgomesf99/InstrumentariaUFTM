@@ -1,3 +1,36 @@
+@font-face {
+    font-family: "OpenSans-Regular";
+    src: url("./fonts/OpenSans-Regular.ttf") format("opentype");
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: "OpenSans-Medium";
+    src: url("./fonts/OpenSans-Medium.ttf") format("opentype");
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    
+  }
+  
+  @font-face {
+    font-family: "OpenSans-SemiBold";
+    src: url("./fonts/OpenSans-SemiBold.ttf") format("opentype");
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    
+  }
+  @font-face {
+    font-family: "OpenSans-Bold";
+    src: url("./fonts/OpenSans-Bold.ttf") format("opentype");
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+}
+
 body {
     font-family: Arial, sans-serif;
     display: flex;
@@ -5,7 +38,10 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
+    font-family: 'OpenSans-Regular';
 }
+
+
 
 #quiz-container {
     width: 80%;
@@ -19,6 +55,7 @@ body {
 }
 
 #options-list li {
+    font-family: 'OpenSans-SemiBold';
     margin: 10px 0;
     background-color: #f0f0f0;
     padding: 10px;
@@ -50,4 +87,40 @@ body {
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 5px;
     z-index: 1000; /* Garante que a pontuação fique acima de outros elementos */
+}
+
+#confirm-answer {
+    font-family: 'OpenSans-Bold';
+    padding: 5px 10px;
+    border-radius: 8px;
+    border: none;
+    background-color: #00AFAD;
+    color: white;
+}
+
+#confirm-answer:disabled {
+    font-family: 'OpenSans-Bold';
+    padding: 5px 10px;
+    border-radius: 8px;
+    border: none;
+    background-color: #727272;
+    color: white;
+}
+
+#next-question {
+    font-family: 'OpenSans-Bold';
+    padding: 5px 10px;
+    border-radius: 8px;
+    border: none;
+    background-color: #187a79;
+    color: white;
+}
+
+#info-title {
+    font-family: 'OpenSans-Bold';
+    padding: 5px 10px;
+    border-radius: 8px;
+    border: none;
+    background-color: #187a2a;
+    color: white;
 }
