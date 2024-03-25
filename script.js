@@ -199,10 +199,8 @@ document.addEventListener('DOMContentLoaded', function() {
     loadQuestion();
 });
 
-    // window.addEventListener('beforeunload', function (e) {
-    //     // Cancela o evento de fechar a janela
-    //     e.preventDefault();
-    //     // Define a mensagem que será exibida ao usuário
-    //     e.returnValue = '';
-    // });
+     window.addEventListener('beforeunload', function (e) {
+         e.preventDefault();
+         e.returnValue = '';
+     });
     
