@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const errorMessage = document.getElementById('error-message');
     const correctAnswerInfo = document.getElementById('correct-answer-info');
     const infoTitle = document.getElementById('info-title');
-    const infoDescription = document.getElementById('info-description');
     const nextQuestionButton = document.getElementById('next-question');
     const confirmButton = document.getElementById('confirm-answer');
     const restartQuizButton = document.getElementById('restart-quiz');
@@ -141,7 +140,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
             // Exibe informações sobre a resposta correta
             infoTitle.textContent = selectedOption; 
-            infoDescription.textContent = "Descrição apropriada da resposta correta.";
             correctAnswerInfo.style.display = 'block';
     
             // Prepara a UI para a próxima questão
