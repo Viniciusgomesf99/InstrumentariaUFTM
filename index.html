@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Instrumentos Cirúrgicos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="score-container">Pontuação: <span id="score">0</span></div>
+    <!-- Restante do seu HTML aqui -->
+    <div id="quiz-container">
+        <div id="question-container">
+            <img id="question-image" src="" alt="Imagem do Instrumento" style="max-width: 100%; margin-bottom: 20px; border-radius: 20px;max-height: 350px;
+            object-fit: cover;">
+            <div id="question-text">Qual é o instrumento cirúrgico mostrado na imagem?</div>
+            <ul id="options-list">
+                <!-- As opções serão inseridas aqui pelo JavaScript -->
+            </ul>
+            <button id="confirm-answer" style="display:none;">Confirmar Resposta</button>
+        </div>
+        
+        <div id="error-message" style="display:none; color: red;">Errado! Tente novamente.</div>
+
+        <div id="correct-answer-info" style="display:none;">
+            <h3 id="info-title"></h3>
+            <p id="info-description"></p>
+            <button id="next-question">Próxima Pergunta</button>
+        </div>
+
+        <button id="restart-quiz" style="display:none;">Refazer</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
