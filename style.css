@@ -96,6 +96,7 @@ body {
     border: none;
     background-color: #00AFAD;
     color: white;
+    cursor: pointer;
 }
 
 #confirm-answer:disabled {
@@ -114,6 +115,7 @@ body {
     border: none;
     background-color: #187a79;
     color: white;
+    cursor: pointer;
 }
 
 #info-title {
