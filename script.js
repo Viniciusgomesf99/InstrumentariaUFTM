@@ -44,8 +44,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const questionText = document.getElementById('question-text');
     const optionsList = document.getElementById('options-list');
-    const errorMessage = document.getElementById('error-message');
-    const correctAnswerInfo = document.getElementById('correct-answer-info');
     const nextQuestionButton = document.getElementById('next-question');
     const restartQuizButton = document.getElementById('restart-quiz');
     const scoreDisplay = document.getElementById('score');
@@ -97,14 +95,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 optionsList.appendChild(li);
             });
             // Garante que o botão de confirmar e a mensagem de erro sejam escondidos ao carregar uma nova pergunta
-            errorMessage.style.visibility = 'hidden';
         } else {
             showFinalScore();
         }
     }
 
     function loadNextQuestion() {
-        correctAnswerInfo.style.display = 'none';
         // Reseta o estilo e ação dos elementos 'li' para a próxima questão
         resetOptionsStyleAndAction();
         loadQuestion(); // Carrega a próxima questão
@@ -178,8 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
         attemptCount = 0;
     }
     
-    function     showFinalScore() {
-        correctAnswerInfo.style.display = 'none';
+    function showFinalScore() {
         optionsList.innerHTML = ''; // Limpa as opções
         questionText.textContent = "Quiz finalizado! Sua pontuação final é: " + totalScore + ".";
         nextQuestionButton.style.display = 'none'; // Esconde o botão de próxima pergunta
@@ -192,7 +187,6 @@ document.addEventListener('DOMContentLoaded', function() {
         scoreDisplay.textContent = 'Pontuação: 0'; // Reseta a exibição da pontuação
         loadQuestion(); // Carrega a primeira questão novamente
         restartQuizButton.style.display = 'none'; // Esconde o botão de refazer
-        correctAnswerInfo.style.display = 'none'; // Garante que a tela de informação esteja escondida
     });
         
     // Carrega a primeira pergunta ao iniciar
