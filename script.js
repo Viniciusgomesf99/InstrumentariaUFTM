@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         "Pinca de Allis",
         "Pinca de Babacock",
         "Pinca de Abadie",
-        "Clamp intestinal",
+        "Clamp Intestinal",
         "Pinca de Duval",
         "Pinca de Collins",
         "Pinca de Backhaus",
