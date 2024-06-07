@@ -153,9 +153,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1000); // Atualiza o contador a cada 1000 milissegundos (1 segundo)
 
             // Aguarda 2 segundos antes de carregar a próxima pergunta
-            setTimeout(function() {
-                loadNextQuestion();
-            }, 2000);
         } else {
             // Destaca a opção incorreta selecionada em vermelho
             selectedOption.style.backgroundColor = "#f44336"; // Vermelho para resposta incorreta
