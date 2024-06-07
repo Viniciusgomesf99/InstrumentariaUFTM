@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Criando a questão
+        console.log('respostaCorreta', respostaCorreta);
         return {
             question: "Qual é o instrumento cirúrgico mostrado na imagem?",
             options: [...opcoesIncorretas, respostaCorreta].sort(() => Math.random() - 0.5),
